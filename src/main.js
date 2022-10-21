@@ -10,7 +10,6 @@ const colors = {
   mastercard: ["#C69347", "#DF6F29"],
   elo: ["#2F35BC", "#29DFDF"],
   hipercard: ["#BC2F51", "#DF29D8"],
-  american: ["#29DF9E", "#2F70BC"],
   default: ["black", "gray"],
 }
 
@@ -55,12 +54,22 @@ const cardNumberPattern = {
     {
       mask: "0000 0000 0000 0000",
       regex: /^4\d{0,15}/,
-      cardType: "visa",
+      cardType: "elo",
     },
     {
       mask: "0000 0000 0000 0000",
       regex: /^(5[1-5]\d{0,2}|22[2-9]\d{0,1}|2[3-7]\d{0,2})\d{0,12}/,
       cardType: "mastercard",
+    },
+    {
+      mask: "0000 0000 0000 0000",
+      regex: /^606282|^3841(?:[0|4|6]{1})0/,
+      cardType: "hipercard",
+    },
+    {
+      mask: "0000 0000 0000 0000",
+      regex: /^(?:6011|65\d{0,2}|64[4-9]\d?)\d{0,12}/,
+      cardType: "discover",
     },
     {
       mask: "0000 0000 0000 0000",
@@ -102,16 +111,25 @@ securityCodeMasked.on('accept', () => {
 
 function updateSecurity(code) {
   const ccSecurity = document.querySelector('.cc-security .value')
-
   ccSecurity.innerHTML = code.length === 0 ? '123' : code
 }
 
 cardNumberMasked.on('accept', () => {
+  const cardType = cardNumberMasked.masked.currentMask.cardType
+  setCardType(cardType)
   updateCardNumber(cardNumberMasked.value)
-
 })
 
 function updateCardNumber(number) {
   const ccNumber = document.querySelector('.cc-number')
   ccNumber.innerText = number.length === 0 ? "1234 5678 9023 3456" : number
+}
+
+expirationDateMasked.on('accept', () => {
+  updateExpirationDate(expirationDateMasked.value)
+})
+
+function updateExpirationDate(date) {
+  const ccExpiration = document.querySelector('.cc-extra .value')
+  ccExpiration.innerText = date.length === 0 ? "02/32" : date
 }
