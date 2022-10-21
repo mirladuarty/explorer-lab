@@ -80,7 +80,7 @@ const cardNumberMasked = Imask(cardNumber, cardNumberPattern)
 
 const addButton = document.querySelector('#add-card')
 addButton.addEventListener('click', () => {
-  alert('você clicou')
+  alert("Cartão Adicionado")
 })
 
 document.querySelector('form').addEventListener('submit', (event) => {
@@ -92,5 +92,16 @@ cardHolder.addEventListener('input', () => {
   const ccHolder = document.querySelector('.cc-holder .value')
 
   ccHolder.innerText = cardHolder.value.length === 0 ? "FULANO DA SILVA" : cardHolder.value
-  
+
 })
+
+securityCodeMasked.on('accept', () => {
+  updateSecurity(securityCodeMasked.value)
+
+})
+
+function updateSecurity(code) {
+  const ccSecurity = document.querySelector('.cc-security .value')
+  
+  ccSecurity.innerHTML = code.length === 0 ? '123' : code
+}
