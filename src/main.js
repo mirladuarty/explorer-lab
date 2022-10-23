@@ -50,13 +50,13 @@ const cardNumberPattern = {
   mask: [
     {
       mask: "0000 0000 0000 0000",
-      regex: /^4\d{0,15}/,
-      cardType: "visa",
+      regex: /^4011(78|79)|^43(1274|8935)|^45(1416|7393|763(1|2))|^50(4175|6699|67[0-6][0-9]|677[0-8]|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9])|^627780|^63(6297|6368|6369)|^65(0(0(3([1-3]|[5-9])|4([0-9])|5[0-1])|4(0[5-9]|[1-3][0-9]|8[5-9]|9[0-9])|5([0-2][0-9]|3[0-8]|4[1-9]|[5-8][0-9]|9[0-8])|7(0[0-9]|1[0-8]|2[0-7])|9(0[1-9]|[1-6][0-9]|7[0-8]))|16(5[2-9]|[6-7][0-9])|50(0[0-9]|1[0-9]|2[1-9]|[3-4][0-9]|5[0-8]))/,
+      cardType: "elo",
     },
     {
       mask: "0000 0000 0000 0000",
-      regex: /^4011(78|79)|^43(1274|8935)|^45(1416|7393|763(1|2))|^50(4175|6699|67[0-6][0-9]|677[0-8]|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9])|^627780|^63(6297|6368|6369)|^65(0(0(3([1-3]|[5-9])|4([0-9])|5[0-1])|4(0[5-9]|[1-3][0-9]|8[5-9]|9[0-9])|5([0-2][0-9]|3[0-8]|4[1-9]|[5-8][0-9]|9[0-8])|7(0[0-9]|1[0-8]|2[0-7])|9(0[1-9]|[1-6][0-9]|7[0-8]))|16(5[2-9]|[6-7][0-9])|50(0[0-9]|1[0-9]|2[1-9]|[3-4][0-9]|5[0-8]))/,
-      cardType: "elo",
+      regex: /^4\d{0,15}/,
+      cardType: "visa",
     },
     {
       mask: "0000 0000 0000 0000",
@@ -88,6 +88,7 @@ const cardNumberPattern = {
     const foundMask = dynamicMasked.compiledMasks.find(function (item) {
       return number.match(item.regex)
     })
+    console.log(foundMask)
     return foundMask
   },
 }
@@ -95,13 +96,38 @@ const cardNumberPattern = {
 const cardNumberMasked = Imask(cardNumber, cardNumberPattern)
 
 const addButton = document.querySelector('#add-card')
-addButton.addEventListener('click', () => {
-  alert("Cartão Adicionado")
-})
+addButton.addEventListener('click', checkInputValue)
 
 document.querySelector('form').addEventListener('submit', (event) => {
   event.preventDefault()
 })
+function checkInputValue() {
+  const cardType = cardNumberMasked.masked.currentMask.regex
+  const inputValue = cardNumberMasked.value.replace(/ /g, "")
+  const cardHolderValue = document.querySelector('#card-holder').value.length
+  const numberValidate = parseInt(inputValue)
+  const cardNumberValue = cardNumberMasked.value.length
+  const securityCodeValue = securityCodeMasked.value.length
+  const expirationDateValue = expirationDateMasked.value.length
+  
+  if (cardNumberValue === 0 || 
+    securityCodeMasked === 0 ||
+    expirationDateValue === 0 ||
+    cardHolderValue === 0)  {
+    alert("Campos vazios, por favor, preencha-os")
+  }else if
+    (cardNumberValue < 12 || 
+    securityCodeMasked < 4 ||
+    expirationDateValue < 4 ||
+    cardHolderValue === 0) {
+      alert('É necessário preencher ')
+    }
+ else {
+    alert('Cartão adicionado!')
+  }
+
+}
+
 
 const cardHolder = document.querySelector('#card-holder')
 cardHolder.addEventListener('input', () => {
