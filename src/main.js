@@ -69,7 +69,7 @@ const cardNumberPattern = {
       cardType: "hipercard",
     },
     {
-      mask: "0000 0000 0000 0000",
+      mask: "000000 0000 00000 0000",
       regex: /^(?:5[0678]\d\d|6304|6390|67\d\d)\d{8,15}$/,
       cardType: "maestro",
     },
@@ -102,21 +102,24 @@ document.querySelector('form').addEventListener('submit', (event) => {
   event.preventDefault()
 })
 function checkInputValue() {
-  const cardType = cardNumberMasked.masked.currentMask.regex
+  const regexCard = cardNumberMasked.masked.currentMask.regex
+  const cardType = cardNumberMasked.masked.currentMask.cardType
   const inputValue = cardNumberMasked.value.replace(/ /g, "")
   const cardHolderValue = document.querySelector('#card-holder').value.length
   const numberValidate = parseInt(inputValue)
   const cardNumberValue = cardNumberMasked.value.length
   const securityCodeValue = securityCodeMasked.value.length
   const expirationDateValue = expirationDateMasked.value.length
-  
-  if (cardNumberValue === 0 || 
+  if(cardType === "default")  {
+    alert('Insira um número de cartão válido')
+  }
+  else if (cardNumberValue === 0 || 
     securityCodeMasked === 0 ||
     expirationDateValue === 0 ||
-    cardHolderValue === 0)  {
-    alert("Campos vazios, por favor, preencha-os")
+    cardHolderValue === 0) {
+    alert("Campos vazios. Por favor, preencha-os")
   }else if
-    (cardNumberValue < 12 || 
+    (cardNumberValue < 16 || 
     securityCodeMasked < 4 ||
     expirationDateValue < 4 ||
     cardHolderValue === 0) {
